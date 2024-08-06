@@ -1,0 +1,200 @@
+@use "sass:meta";
+@use "../util/mixins";
+@use "../util/value";
+@use "column";
+@use "grid";
+@use "gutter";
+@use "layout";
+@use "position";
+@use "row";
+@use "size";
+
+// Foundation for Sites
+// https://get.foundation
+// Licensed under MIT Open Source
+
+////
+/// @group grid
+////
+
+/// Outputs CSS classes for the grid.
+/// @access private
+@mixin foundation-grid(
+  $row: 'row',
+  $column: 'column',
+  $column-row: 'column-row',
+  $gutter: 'gutter',
+  $push: 'push',
+  $pull: 'pull',
+  $center: 'centered',
+  $uncenter: 'uncentered',
+  $collapse: 'collapse',
+  $uncollapse: 'uncollapse',
+  $offset: 'offset',
+  $end: 'end',
+  $expanded: 'expanded',
+  $block: 'block'
+) {
+  // Row
+  .#{$row} {
+    @include row.grid-row;
+
+    // Collapsing
+    &.#{$collapse} {
+      > .#{$column} {
+        @include gutter.grid-col-collapse;
+      }
+    }
+
+    // Nesting
+    & .#{$row} {
+      @include row.grid-row-nest(grid.$grid-column-gutter);
+
+      &.#{$collapse} {
+        margin-right: 0;
+        margin-left: 0;
+      }
+    }
+
+    // Expanded (full-width) row
+    &.#{$expanded} {
+      @include row.grid-row-size(expand);
+
+      .#{$row} {
+        margin-right: auto;
+        margin-left: auto;
+      }
+    }
+
+    &:not(.#{$expanded}) .#{$row} {
+      @include row.grid-row-size(expand);
+    }
+
+    @if meta.type-of(grid.$grid-column-gutter) == 'map' {
+      // Static (unresponsive) row gutters
+      //
+      @each $breakpoint, $value in grid.$grid-column-gutter {
+        &.#{$gutter}-#{$breakpoint} {
+          > .#{$column} {
+            @include gutter.grid-col-gutter($value);
+          }
+        }
+      }
+    }
+  }
+
+  // Column
+  .#{$column} {
+    @include column.grid-col;
+
+    @if grid.$grid-column-align-edge {
+      &.#{$end} {
+        @include position.grid-col-end;
+      }
+    }
+  }
+
+  // Column row
+  // The double .row class is needed to bump up the specificity
+  .#{$column}.#{$row}.#{$row} {
+    float: none;
+  }
+
+  // To properly nest a column row, padding and margin is removed
+  .#{$row} .#{$column}.#{$row}.#{$row} {
+    margin-right: 0;
+    margin-left: 0;
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  @include mixins.zf-each-breakpoint {
+    @for $i from 1 through row.$grid-column-count {
+      // Column width
+      .#{mixins.$zf-size}-#{$i} {
+        @include size.grid-column-size($i);
+      }
+
+      // Source ordering
+      @if $i < row.$grid-column-count {
+        @if $push {
+          .#{mixins.$zf-size}-#{$push}-#{$i} {
+            @include position.grid-col-pos($i);
+          }
+        }
+
+        @if $pull {
+          .#{mixins.$zf-size}-#{$pull}-#{$i} {
+            @include position.grid-col-pos(-$i);
+          }
+        }
+      }
+
+      // Offsets
+      $o: $i - 1;
+
+      @if $offset {
+        .#{mixins.$zf-size}-#{$offset}-#{$o} {
+          @include position.grid-col-off($o);
+        }
+      }
+    }
+
+    // Block grid
+    @for $i from 1 through grid.$block-grid-max {
+      .#{mixins.$zf-size}-up-#{$i} {
+        @include layout.grid-layout($i, '.#{$column}');
+      }
+    }
+
+    // Responsive collapsing
+    .#{mixins.$zf-size}-#{$collapse} {
+      > .#{$column} { @include gutter.grid-col-collapse; }
+
+      .#{$row} {
+        margin-right: 0;
+        margin-left: 0;
+      }
+    }
+
+    .#{$expanded}.#{$row} .#{mixins.$zf-size}-#{$collapse}.#{$row} {
+      margin-right: 0;
+      margin-left: 0;
+    }
+
+    .#{mixins.$zf-size}-#{$uncollapse} {
+      > .#{$column} { @include gutter.grid-col-gutter(mixins.$zf-size); }
+    }
+
+    // Positioning
+    @if $center {
+      .#{mixins.$zf-size}-#{$center} {
+        @include position.grid-col-pos(center);
+      }
+    }
+
+    // Gutter adjustment
+    $-gutter-unpos-selector: (
+      if($uncenter, '.#{mixins.$zf-size}-#{$uncenter}', null),
+      if($push, '.#{mixins.$zf-size}-#{$push}-0', null),
+      if($pull, '.#{mixins.$zf-size}-#{$pull}-0', null),
+    );
+    @if ($uncenter or $push or $pull) {
+      #{$-gutter-unpos-selector} {
+        @include position.grid-col-unpos;
+      }
+    }
+  }
+
+  // Block grid columns
+  .#{$column}-#{$block} {
+    @include gutter.grid-column-margin;
+  }
+
+  @if $column == 'column' and value.has-value(grid.$grid-column-alias) {
+    .#{grid.$grid-column-alias} {
+      // sass-lint:disable-block placeholder-in-extend
+      @extend .column;
+    }
+  }
+}

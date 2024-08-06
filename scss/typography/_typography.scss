@@ -1,0 +1,26 @@
+// Foundation for Sites
+// https://get.foundation
+// Licensed under MIT Open Source
+
+////
+/// @group typography
+////
+
+// Base typography styles (tags only)
+@use 'base';
+
+// Typography helper classes (classes only)
+@use 'helpers';
+
+// Text alignment classes
+@use 'alignment';
+
+// Print styles
+@use 'print';
+
+@mixin foundation-typography {
+  @include base.foundation-typography-base;
+  @include helpers.foundation-typography-helpers;
+  @include alignment.foundation-text-alignment;
+  @include print.foundation-print-styles;
+}

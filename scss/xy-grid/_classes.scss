@@ -1,0 +1,506 @@
+@use "sass:map";
+@use "sass:meta";
+@use "../util/breakpoint";
+@use "../util/mixins";
+@use "cell";
+@use "collapse";
+@use "frame";
+@use "grid";
+@use "gutters";
+@use "layout";
+@use "position";
+@use "xy-grid";
+
+// Foundation for Sites
+// https://get.foundation
+// Licensed under MIT Open Source
+
+////
+/// @group xy-grid
+////
+
+// Margin Grid classes
+@mixin xy-base-grid-classes {
+
+  // Grid Container
+  .grid-container {
+    @include grid.xy-grid-container;
+
+    &.fluid {
+      @include grid.xy-grid-container(100%);
+    }
+
+    &.full {
+      @include grid.xy-grid-container(100%, 0);
+    }
+  }
+
+  // Base grid styles
+  .grid-x {
+    @include grid.xy-grid;
+  }
+
+  .cell {
+    @include cell.xy-cell(full, $gutter-type: none);
+
+    &.auto {
+      @include cell.xy-cell-base(auto);
+    }
+
+    &.shrink {
+      @include cell.xy-cell-base(shrink);
+    }
+
+  }
+  .grid-x {
+    > .auto {
+      @include cell.xy-cell-size(auto, $gutter-type: none);
+    }
+
+    > .shrink {
+      @include cell.xy-cell-size(shrink, $gutter-type: none);
+    }
+  }
+
+  // Auto width
+  @include mixins.zf-each-breakpoint() {
+    // This is a bit of a hack/workaround, see these issues & PRs for the backstory:
+    // https://github.com/foundation/foundation-sites/issues/10244
+    // https://github.com/foundation/foundation-sites/pull/10222 and
+    // https://github.com/foundation/foundation-sites/pull/10164
+    .grid-x {
+      $str: "> .#{mixins.$zf-size}-shrink, > .#{mixins.$zf-size}-full";
+      @for $i from 1 through xy-grid.$grid-columns {
+        $str: $str + ", > .#{mixins.$zf-size}-#{$i}";
+      }
+      #{$str} {
+        flex-basis: auto;
+      }
+    }
+  }
+
+  @include mixins.zf-each-breakpoint() {
+    // Responsive "auto" modifier
+    @if not(mixins.$zf-size == breakpoint.$zf-zero-breakpoint) {
+      .grid-x > .#{mixins.$zf-size}-auto {
+        @include cell.xy-cell(auto, $gutter-type: none);
+      }
+    }
+
+    %-xy-cell-base-shrink-horizontal-#{mixins.$zf-size} {
+      @include cell.xy-cell-base(shrink);
+    }
+
+    // Responsive "shrink" modifier
+    @if not(mixins.$zf-size == breakpoint.$zf-zero-breakpoint) {
+      .grid-x > .#{mixins.$zf-size}-shrink {
+        @extend %-xy-cell-base-shrink-horizontal-#{mixins.$zf-size};
+        @include cell.xy-cell-size(shrink, $gutter-type: none);
+      }
+    }
+
+    // Responsive width modifiers
+    @for $i from 1 through xy-grid.$grid-columns {
+      // Sizing (percentage)
+      .grid-x > .#{mixins.$zf-size}-#{$i} {
+        @extend %-xy-cell-base-shrink-horizontal-#{mixins.$zf-size};
+        @include cell.xy-cell-size($i, $gutter-type: none);
+      }
+    }
+  }
+
+  // Reset width when using `.grid-margin-x` not on `.grid-x`
+  .grid-margin-x:not(.grid-x) > .cell {
+    width: auto;
+  }
+
+  // Reset height when using `.grid-margin-y` not on `.grid-y`
+  .grid-margin-y:not(.grid-y) > .cell {
+    height: auto;
+  }
+}
+
+@mixin -xy-breakpoint-cell-classes($class-breakpoint, $gutter-breakpoint, $vertical) {
+  $prefix: if($class-breakpoint == breakpoint.$zf-zero-breakpoint, '', '#{$class-breakpoint}-');
+  > .#{$prefix}auto {
+    @include cell.xy-cell-size(auto, $vertical: $vertical);
+  }
+
+  > .#{$prefix}shrink {
+    @include cell.xy-cell-size(shrink, $vertical: $vertical);
+  }
+
+  @for $i from 1 through xy-grid.$grid-columns {
+    // Sizing (percentage)
+    $classname: if($vertical, '.#{$class-breakpoint}-#{$i}', '.#{$class-breakpoint}-#{$i}');
+
+    > #{$classname} {
+      @include cell.xy-cell-size($i, $vertical: $vertical);
+    }
+  }
+}
+
+// Margin Grid classes
+@mixin xy-margin-grid-classes(
+  $gutter-position: left right,
+  $vertical: false,
+  $wrapping-selector: '.grid-margin-x'
+){
+  #{$wrapping-selector} {
+    @include gutters.xy-gutters($negative: true, $gutter-position: $gutter-position);
+
+    // Base cell styles
+    > .cell {
+      @include cell.xy-cell($vertical: $vertical, $output: (size gutters));
+    }
+
+    // base styles need to all be before the auto and shrink styles
+    @include mixins.zf-each-breakpoint() {
+      @if(meta.type-of(xy-grid.$grid-margin-gutters) == 'map' and map.has-key(xy-grid.$grid-margin-gutters, mixins.$zf-size) and mixins.$zf-size != breakpoint.$zf-zero-breakpoint) {
+        > .cell {
+          @include cell.xy-cell($vertical: $vertical, $output: (size gutters));
+        }
+      }
+    }
+
+    @include mixins.zf-each-breakpoint() {
+
+      // This is purely for responsive gutters - the margin grid has to go back and adjust widths (or heights)
+      // for all prior breakpoints.
+      // As their gutter is defined with their width/height, even breakpoint without a new margin must be
+      // generated to not having their width/height overrided by re-adjusted smaller breakpoints.
+      @if(meta.type-of(xy-grid.$grid-margin-gutters) == 'map' and map.has-key(xy-grid.$grid-margin-gutters, mixins.$zf-size)) {
+        @each $bp in breakpoint.zf-breakpoints-less-than(mixins.$zf-size) {
+          @include -xy-breakpoint-cell-classes($bp, mixins.$zf-size, $vertical);
+        }
+      }
+
+      @include -xy-breakpoint-cell-classes(mixins.$zf-size, mixins.$zf-size, $vertical);
+    }
+  }
+}
+
+// Padding Grid classes
+@mixin xy-padding-grid-classes {
+  .grid-padding-x {
+
+    // Negative margin for nested grids
+    .grid-padding-x {
+      @include gutters.xy-gutters($negative: true);
+    }
+
+    // Negative margin for grids within `grid-container/grid-container.fluid`
+    // This allows margin and padding grids to line up with eachother
+    .grid-container:not(.full) > & {
+      @include gutters.xy-gutters($negative: true);
+    }
+
+    // Base cell styles
+    > .cell {
+      @include gutters.xy-gutters($gutters: xy-grid.$grid-padding-gutters, $gutter-type: padding);
+    }
+  }
+}
+
+// Block Grid classes
+@mixin xy-block-grid-classes($margin-grid: true, $padding-grid: true) {
+  @if $padding-grid {
+    @include mixins.zf-each-breakpoint {
+      @for $i from 1 through xy-grid.$xy-block-grid-max {
+        .#{mixins.$zf-size}-up-#{$i} {
+          @include layout.xy-grid-layout($n: $i, $selector: '.cell', $gutter-type: padding, $output: (size));
+        }
+      }
+    }
+  }
+
+  @if $margin-grid {
+    @include mixins.zf-each-breakpoint {
+      @for $i from 1 through xy-grid.$xy-block-grid-max {
+        // This is purely for responsive gutters - the margin grid has to go back and adjust widths (or heights)
+        // for prior breakpoints based on the responsive gutter.
+        @if(meta.type-of(xy-grid.$grid-margin-gutters) == 'map' and map.has-key(xy-grid.$grid-margin-gutters, mixins.$zf-size)) {
+          @each $bp in breakpoint.zf-breakpoints-less-than(mixins.$zf-size) {
+            @if(map.has-key(xy-grid.$grid-margin-gutters, $bp)) {
+              .grid-margin-x.#{$bp}-up-#{$i} {
+                @include layout.xy-grid-layout($n: $i, $selector: '.cell', $gutter-type: margin, $output: (size));
+              }
+            }
+          }
+        }
+      }
+      @for $i from 1 through xy-grid.$xy-block-grid-max {
+        .grid-margin-x.#{mixins.$zf-size}-up-#{$i} {
+          @include layout.xy-grid-layout($n: $i, $selector: '.cell', $gutter-type: margin, $output: (size));
+        }
+      }
+    }
+  }
+}
+
+// Collapse classes
+@mixin xy-collapse-grid-classes($margin-grid: true, $padding-grid: true) {
+  @each $bp in breakpoint.$breakpoint-classes {
+    @if $margin-grid {
+      .#{$bp}-margin-collapse {
+        @include collapse.xy-grid-collapse($gutter-type: margin, $min-breakpoint: $bp);
+      }
+    }
+
+    @if $padding-grid {
+      .#{$bp}-padding-collapse {
+        @include collapse.xy-grid-collapse($gutter-type: padding, $min-breakpoint: $bp);
+      }
+    }
+  }
+}
+
+// Offset classes
+@mixin xy-offset-cell-classes {
+  @include mixins.zf-each-breakpoint {
+    @for $i from 1 through xy-grid.$grid-columns {
+      // Offsets
+      $o: $i - 1;
+
+      .#{mixins.$zf-size}-offset-#{$o} {
+        @include position.xy-cell-offset($o, $gutters: xy-grid.$grid-padding-gutters, $gutter-type: padding);
+      }
+
+      .grid-margin-x > .#{mixins.$zf-size}-offset-#{$o} {
+        @include position.xy-cell-offset($o);
+      }
+    }
+  }
+}
+
+// Vertical Grid classes
+@mixin xy-vertical-grid-classes(
+  $margin-grid: true,
+  $padding-grid: true
+) {
+
+  // @include -zf-each-breakpoint() {
+  //   @if not($-zf-size == $-zf-zero-breakpoint) {
+  //   }
+  // }
+
+  .grid-y {
+    @include grid.xy-grid(vertical, false);
+
+
+    > .cell {
+      @include cell.xy-cell-reset();
+    }
+
+    > .auto {
+      @include cell.xy-cell-size(auto, $gutter-type: none, $vertical: true);
+    }
+
+    > .shrink {
+      @include cell.xy-cell-size(shrink, $gutter-type: none, $vertical: true);
+    }
+
+
+    @include mixins.zf-each-breakpoint() {
+      // This is a bit of a hack/workaround, see these issues and PRs for the backstory:
+      // https://github.com/foundation/foundation-sites/issues/10244
+      // https://github.com/foundation/foundation-sites/pull/10222 and
+      // https://github.com/foundation/foundation-sites/pull/10164
+      $str: "> .#{mixins.$zf-size}-shrink, > .#{mixins.$zf-size}-full";
+      @for $i from 1 through xy-grid.$grid-columns {
+        $str: $str + ", > .#{mixins.$zf-size}-#{$i}";
+      }
+      #{$str} {
+        flex-basis: auto;
+      }
+    }
+
+    @include mixins.zf-each-breakpoint() {
+      // Responsive "auto" modifier
+      @if not(mixins.$zf-size == breakpoint.$zf-zero-breakpoint) {
+        > .#{mixins.$zf-size}-auto {
+          @include cell.xy-cell(auto, $gutter-type: none, $vertical: true);
+        }
+      }
+
+      %-xy-cell-base-shrink-vertical-#{mixins.$zf-size} {
+        @include cell.xy-cell-base(shrink);
+      }
+
+      // Responsive "shrink" modifier
+      @if not(mixins.$zf-size == breakpoint.$zf-zero-breakpoint) {
+        > .#{mixins.$zf-size}-shrink {
+          @extend %-xy-cell-base-shrink-vertical-#{mixins.$zf-size};
+          @include cell.xy-cell-size(shrink, $gutter-type: none, $vertical: true);
+        }
+      }
+
+      // Responsive width modifiers
+      @for $i from 1 through xy-grid.$grid-columns {
+        // Sizing (percentage)
+        > .#{mixins.$zf-size}-#{$i} {
+          @extend %-xy-cell-base-shrink-vertical-#{mixins.$zf-size};
+          @include cell.xy-cell-size($i, $gutter-type: none, $vertical: true);
+        }
+      }
+
+    }
+  }
+
+  @if $padding-grid {
+    .grid-padding-y {
+      // Negative margin for nested grids
+      .grid-padding-y {
+        @include gutters.xy-gutters($negative: true, $gutter-position: top bottom);
+      }
+
+      // Base cell styles
+      > .cell {
+        @include gutters.xy-gutters($gutters: xy-grid.$grid-padding-gutters, $gutter-type: padding, $gutter-position: top bottom);
+      }
+    }
+  }
+
+  @if $margin-grid {
+    @include xy-margin-grid-classes(top bottom, true, '.grid-margin-y');
+  }
+
+}
+
+@mixin xy-frame-grid-classes($vertical-grid: true, $margin-grid: true) {
+  // Framed grid styles
+  .grid-frame {
+    @include frame.xy-grid-frame;
+  }
+
+  .cell .grid-frame {
+    width: 100%; // Same as include with $nested, but with less css
+  }
+
+  .cell-block {
+    @include frame.xy-cell-block();
+  }
+
+  .cell-block-y {
+    @include frame.xy-cell-block(true);
+  }
+
+
+  .cell-block-container {
+    @include frame.xy-cell-block-container();
+  }
+
+
+  @include mixins.zf-each-breakpoint(false) {
+
+    .#{mixins.$zf-size}-grid-frame {
+      @include frame.xy-grid-frame;
+    }
+
+    .cell .#{mixins.$zf-size}-grid-frame {
+      width: 100%; // Same as include with $nested, but with less css
+    }
+
+    .#{mixins.$zf-size}-cell-block {
+      @include frame.xy-cell-block();
+    }
+
+    .#{mixins.$zf-size}-cell-block-container {
+      @include frame.xy-cell-block-container();
+    }
+
+    .#{mixins.$zf-size}-cell-block-y {
+      @include frame.xy-cell-block(true);
+    }
+  }
+
+  @if $vertical-grid {
+    .grid-y {
+      &.grid-frame {
+        @include frame.xy-grid-frame(true);
+        width: auto;
+      }
+
+      @include mixins.zf-each-breakpoint(false) {
+        &.#{mixins.$zf-size}-grid-frame {
+          @include frame.xy-grid-frame(true);
+          width: auto;
+        }
+
+      }
+    }
+    .cell {
+      .grid-y.grid-frame {
+        height: 100%; // Same as include with $nested, but with less css
+      }
+      @include mixins.zf-each-breakpoint(false) {
+        .grid-y.#{mixins.$zf-size}-grid-frame {
+          height: 100%; // Same as include with $nested, but with less css
+        }
+      }
+    }
+  }
+  @if $margin-grid {
+    @include xy-margin-grid-classes(top bottom, true, '.grid-margin-y');
+    .grid-frame.grid-margin-y {
+      @include frame.xy-grid-frame(true, false, xy-grid.$grid-margin-gutters, $include-base: false);
+    }
+    @include mixins.zf-each-breakpoint(false) {
+      .grid-margin-y.#{mixins.$zf-size}-grid-frame {
+        @include frame.xy-grid-frame(true, false, xy-grid.$grid-margin-gutters, mixins.$zf-size, false);
+      }
+    }
+  }
+}
+
+// Final classes
+@mixin foundation-xy-grid-classes(
+  $base-grid: true,
+  $margin-grid: true,
+  $padding-grid: true,
+  $block-grid: true,
+  $collapse: true,
+  $offset: true,
+  $vertical-grid: true,
+  $frame-grid: true
+) {
+
+  // Base grid styles
+  @if($base-grid) {
+    @include xy-base-grid-classes();
+  }
+
+  // Margin grid
+  @if($margin-grid) {
+    @include xy-margin-grid-classes();
+  }
+
+  // Padding grid
+  @if($padding-grid) {
+    @include xy-padding-grid-classes();
+  }
+
+  // Block grid
+  @if($block-grid) {
+    @include xy-block-grid-classes($margin-grid, $padding-grid);
+  }
+
+  // Collapse gutters
+  @if($collapse) {
+    @include xy-collapse-grid-classes($margin-grid, $padding-grid);
+  }
+
+  // Offset gutters
+  @if($offset) {
+    @include xy-offset-cell-classes();
+  }
+
+  // Vertical grid
+  @if($vertical-grid) {
+    @include xy-vertical-grid-classes($margin-grid, $padding-grid);
+  }
+
+  @if ($frame-grid) {
+    @include xy-frame-grid-classes($vertical-grid, $margin-grid)
+  }
+}

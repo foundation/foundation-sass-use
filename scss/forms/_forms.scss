@@ -1,0 +1,35 @@
+// Foundation for Sites
+// https://get.foundation
+// Licensed under MIT Open Source
+
+////
+/// @group forms
+////
+
+/// Global spacing for form elements.
+/// @type Number
+$form-spacing: unit.rem-calc(16) !default;
+
+@use 'text';
+@use 'checkbox';
+@use 'label';
+@use 'help-text';
+@use 'input-group';
+@use 'fieldset';
+@use 'select';
+@use 'range';
+@use 'progress';
+@use 'meter';
+@use 'error';
+@use "../util/unit";
+
+@mixin foundation-forms {
+  @include text.foundation-form-text;
+  @include checkbox.foundation-form-checkbox;
+  @include label.foundation-form-label;
+  @include help-text.foundation-form-helptext;
+  @include input-group.foundation-form-prepostfix;
+  @include fieldset.foundation-form-fieldset;
+  @include select.foundation-form-select;
+  @include error.foundation-form-error;
+}

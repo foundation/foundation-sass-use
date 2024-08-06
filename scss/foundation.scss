@@ -1,0 +1,158 @@
+/**
+ * Foundation for Sites
+ * Version 6.8.1
+ * https://get.foundation
+ * Licensed under MIT Open Source
+ */
+
+// --- Dependencies ---
+@use 'vendor/normalize';
+@use '../_vendor/sassy-lists/stylesheets/helpers/missing-dependencies';
+@use '../_vendor/sassy-lists/stylesheets/helpers/true';
+@use '../_vendor/sassy-lists/stylesheets/functions/contain';
+@use '../_vendor/sassy-lists/stylesheets/functions/purge';
+@use '../_vendor/sassy-lists/stylesheets/functions/remove';
+@use '../_vendor/sassy-lists/stylesheets/functions/replace';
+@use '../_vendor/sassy-lists/stylesheets/functions/to-list';
+
+// --- Settings ---
+// import your own `settings` here or
+// import and modify the default settings through
+// @import 'settings/settings';
+
+// --- Components ---
+// Utilities
+@use 'util/util';
+// Global styles
+@use 'global';
+@use 'forms/forms';
+@use 'typography/typography';
+
+// Grids
+@use 'grid/grid';
+@use 'xy-grid/xy-grid' as xygrid;
+// Generic components
+@use 'components/button';
+@use 'components/button-group';
+@use 'components/close-button';
+@use 'components/label';
+@use 'components/progress-bar';
+@use 'components/slider';
+@use 'components/switch';
+@use 'components/table';
+// Basic components
+@use 'components/badge';
+@use 'components/breadcrumbs';
+@use 'components/callout';
+@use 'components/card';
+@use 'components/dropdown';
+@use 'components/pagination';
+@use 'components/tooltip';
+
+// Containers
+@use 'components/accordion';
+@use 'components/media-object';
+@use 'components/orbit';
+@use 'components/responsive-embed';
+@use 'components/tabs';
+@use 'components/thumbnail';
+// Menu-based containers
+@use 'components/menu';
+@use 'components/menu-icon';
+@use 'components/accordion-menu';
+@use 'components/drilldown';
+@use 'components/dropdown-menu';
+
+// Layout components
+@use 'components/off-canvas';
+@use 'components/reveal';
+@use 'components/sticky';
+@use 'components/title-bar';
+@use 'components/top-bar';
+
+// Helpers
+@use 'components/float';
+@use 'components/flex';
+@use 'components/visibility';
+@use 'prototype/prototype';
+@use "grid/classes";
+@use "grid/flex-grid";
+@use "xy-grid/classes" as xyclasses;
+
+
+@mixin foundation-everything(
+  $flex: true,
+  $prototype: false,
+  $xy-grid: $xy-grid
+) {
+  @if $flex {
+    @include global.set-global-flexbox(true);
+  }
+
+  @if $xy-grid {
+    @include xygrid.set-xy-grid(true);
+  }
+
+  // Global styles
+  @include global.foundation-global-styles;
+  @include forms.foundation-forms;
+  @include typography.foundation-typography;
+
+  // Grids
+  @if not $flex {
+    @include classes.foundation-grid;
+  }
+  @else {
+    @if $xy-grid {
+      @include xyclasses.foundation-xy-grid-classes;
+    }
+    @else {
+      @include flex-grid.foundation-flex-grid;
+    }
+  }
+
+  // Generic components
+  @include button.foundation-button;
+  @include button-group.foundation-button-group;
+  @include close-button.foundation-close-button;
+  @include label.foundation-label;
+  @include progress-bar.foundation-progress-bar;
+  @include slider.foundation-slider;
+  @include switch.foundation-switch;
+  @include table.foundation-table;
+  // Basic components
+  @include badge.foundation-badge;
+  @include breadcrumbs.foundation-breadcrumbs;
+  @include callout.foundation-callout;
+  @include card.foundation-card;
+  @include dropdown.foundation-dropdown;
+  @include pagination.foundation-pagination;
+  @include tooltip.foundation-tooltip;
+
+  // Containers
+  @include accordion.foundation-accordion;
+  @include media-object.foundation-media-object;
+  @include orbit.foundation-orbit;
+  @include responsive-embed.foundation-responsive-embed;
+  @include tabs.foundation-tabs;
+  @include thumbnail.foundation-thumbnail;
+  // Menu-based containers
+  @include menu.foundation-menu;
+  @include menu-icon.foundation-menu-icon;
+  @include accordion-menu.foundation-accordion-menu;
+  @include drilldown.foundation-drilldown-menu;
+  @include dropdown-menu.foundation-dropdown-menu;
+
+  // Layout components
+  @include off-canvas.foundation-off-canvas;
+  @include reveal.foundation-reveal;
+  @include sticky.foundation-sticky;
+  @include title-bar.foundation-title-bar;
+  @include top-bar.foundation-top-bar;
+
+  // Helpers
+  @include float.foundation-float-classes;
+  @if $flex { @include flex.foundation-flex-classes; }
+  @include visibility.foundation-visibility-classes;
+  @if $prototype { @include prototype.foundation-prototype-classes; }
+}

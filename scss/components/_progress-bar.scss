@@ -1,0 +1,68 @@
+@use "../forms/progress";
+@use "../global";
+@use "../util/mixins";
+@use "../util/value";
+
+// Foundation for Sites
+// https://get.foundation
+// Licensed under MIT Open Source
+
+/// Adds styles for a progress bar container.
+@mixin progress-container {
+  height: progress.$progress-height;
+  margin-bottom: progress.$progress-margin-bottom;
+  border-radius: progress.$progress-radius;
+  background-color: progress.$progress-background;
+}
+
+/// Adds styles for the inner meter of a progress bar.
+@mixin progress-meter {
+  position: relative;
+  display: block;
+  width: 0%;
+  height: 100%;
+  background-color: progress.$progress-meter-background;
+
+  @if value.has-value(progress.$progress-radius) {
+    border-radius: global.$global-radius;
+  }
+}
+
+/// Adds styles for text in the progress meter.
+@mixin progress-meter-text {
+  @include mixins.absolute-center;
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: global.$white;
+  white-space: nowrap;
+
+  @if value.has-value(progress.$progress-radius) {
+    border-radius: progress.$progress-radius;
+  }
+}
+
+@mixin foundation-progress-bar {
+  // Progress bar
+  .progress {
+    @include progress-container;
+
+    @each $name, $color in global.$foundation-palette {
+      &.#{$name} {
+        .progress-meter {
+          background-color: $color;
+        }
+      }
+    }
+  }
+
+  // Inner meter
+  .progress-meter {
+    @include progress-meter;
+  }
+
+  // Inner meter text
+  .progress-meter-text {
+    @include progress-meter-text;
+  }
+}

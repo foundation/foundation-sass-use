@@ -1,0 +1,120 @@
+@use "../global";
+@use "../util/color";
+@use "../util/value";
+
+// Foundation for Sites
+// https://get.foundation
+// Licensed under MIT Open Source
+
+////
+/// @group meter
+////
+
+/// Height of a `<meter>` element.
+/// @type Length
+$meter-height: 1rem !default;
+
+/// Border radius of a `<meter>` element.
+/// @type Length
+$meter-radius: global.$global-radius !default;
+
+/// Background color of a `<meter>` element.
+/// @type Color
+$meter-background: global.$medium-gray !default;
+
+/// Meter fill for an optimal value in a `<meter>` element.
+/// @type Color
+$meter-fill-good: color.$success-color !default;
+
+/// Meter fill for an average value in a `<meter>` element.
+/// @type Color
+$meter-fill-medium: color.$warning-color !default;
+
+/// Meter fill for a suboptimal value in a `<meter>` element.
+/// @type Color
+$meter-fill-bad: color.$alert-color !default;
+
+@mixin foundation-meter-element {
+  meter {
+    display: block;
+    width: 100%;
+    height: $meter-height;
+    margin-bottom: 1rem;
+
+    // Disable `-webkit-appearance: none` from getting prefixed,
+    // We have disabled autoprefixer first and are just only using 
+    // `-moz-appearance: none` as a prefix and neglecting the webkit.
+    
+    /*! autoprefixer: off */
+    -moz-appearance: none; // sass-lint:disable-line no-vendor-prefixes
+    appearance: none;
+
+    @if value.has-value($meter-radius) {
+      border-radius: $meter-radius;
+    }
+
+    // For Firefox
+    border: 0;
+    background: $meter-background;
+
+    // Chrome/Safari/Edge
+    &::-webkit-meter-bar {
+      border: 0;
+      @if value.has-value($meter-radius) {
+        border-radius: $meter-radius;
+      }
+
+      background: $meter-background;
+    }
+
+    &::-webkit-meter-inner-element {
+      @if value.has-value($meter-radius) {
+        border-radius: $meter-radius;
+      }
+    }
+
+    &::-webkit-meter-optimum-value {
+      background: $meter-fill-good;
+
+      @if value.has-value($meter-radius) {
+        border-radius: $meter-radius;
+      }
+    }
+
+    &::-webkit-meter-suboptimum-value {
+      background: $meter-fill-medium;
+
+      @if value.has-value($meter-radius) {
+        border-radius: $meter-radius;
+      }
+    }
+
+    &::-webkit-meter-even-less-good-value {
+      background: $meter-fill-bad;
+
+      @if value.has-value($meter-radius) {
+        border-radius: $meter-radius;
+      }
+    }
+
+    &::-moz-meter-bar {
+      background: color.$primary-color;
+
+      @if value.has-value($meter-radius) {
+        border-radius: $meter-radius;
+      }
+    }
+
+    &:-moz-meter-optimum::-moz-meter-bar {
+      background: $meter-fill-good;
+    }
+
+    &:-moz-meter-sub-optimum::-moz-meter-bar {
+      background: $meter-fill-medium;
+    }
+
+    &:-moz-meter-sub-sub-optimum::-moz-meter-bar {
+      background: $meter-fill-bad;
+    }
+  }
+}

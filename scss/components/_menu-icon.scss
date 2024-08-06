@@ -1,0 +1,12 @@
+@use "../util/mixins";
+@use "title-bar";
+
+@mixin foundation-menu-icon {
+  .menu-icon {
+    @include mixins.hamburger($color: title-bar.$titlebar-icon-color, $color-hover: title-bar.$titlebar-icon-color-hover);
+  }
+
+  .menu-icon.dark {
+    @include mixins.hamburger;
+  }
+}

@@ -1,0 +1,24 @@
+@use "../util/breakpoint";
+
+// Foundation for Sites
+// https://get.foundation
+// Licensed under MIT Open Source
+
+@mixin foundation-text-alignment {
+  @each $size in breakpoint.$breakpoint-classes {
+    @include breakpoint.breakpoint($size) {
+      @each $align in (left, right, center, justify) {
+        @if $size != breakpoint.$zf-zero-breakpoint {
+          .#{$size}-text-#{$align} {
+            text-align: $align;
+          }
+        }
+        @else {
+          .text-#{$align} {
+            text-align: $align;
+          }
+        }
+      }
+    }
+  }
+}

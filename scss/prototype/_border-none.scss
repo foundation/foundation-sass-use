@@ -1,0 +1,38 @@
+@use "../global";
+@use "../util/breakpoint";
+
+// Foundation for Sites
+// https://get.foundation
+// Licensed under MIT Open Source
+
+////
+/// @group prototype-border-none
+////
+
+/// Responsive breakpoints for border none.
+/// @type Boolean
+$prototype-border-none-breakpoints: global.$global-prototype-breakpoints !default;
+
+/// Border none utility
+@mixin border-none {
+  border: 0 !important;
+}
+
+@mixin foundation-prototype-border-none {
+  .border-none {
+    @include border-none;
+  }
+
+  @if ($prototype-border-none-breakpoints) {
+    // Loop through Responsive Breakpoints
+    @each $size in breakpoint.$breakpoint-classes {
+      @include breakpoint.breakpoint($size) {
+        @if $size != breakpoint.$zf-zero-breakpoint {
+          .#{$size}-border-none {
+            @include border-none;
+          }
+        }
+      }
+    }
+  }
+}

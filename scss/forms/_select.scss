@@ -1,0 +1,98 @@
+@use "../global";
+@use "../util/mixins";
+@use "../util/unit";
+@use "../util/value";
+@use "forms";
+@use "text";
+
+// Foundation for Sites
+// https://get.foundation
+// Licensed under MIT Open Source
+
+////
+/// @group forms
+////
+
+/// Background color for select menus.
+/// @type Color
+$select-background: global.$white !default;
+
+/// Color of the dropdown triangle inside select menus. Set to `transparent` to remove it entirely.
+/// @type Color
+$select-triangle-color: global.$dark-gray !default;
+
+/// Default radius for select menus.
+/// @type Color
+$select-radius: global.$global-radius !default;
+
+@mixin form-select {
+  $height: (text.$input-font-size * unit.unitless-calc(text.$input-line-height)) + (value.get-side(text.$input-padding, 'top') + value.get-side(text.$input-padding, 'bottom')) - unit.rem-calc(1);
+
+  height: $height;
+  margin: 0 0 forms.$form-spacing;
+  padding: text.$input-padding;
+
+  appearance: none;
+  border: text.$input-border;
+  border-radius: $select-radius;
+  background-color: $select-background;
+
+  font-family: text.$input-font-family;
+  font-size: text.$input-font-size;
+  font-weight: text.$input-font-weight;
+  line-height: text.$input-line-height;
+  color: text.$input-color;
+
+  @if value.has-value(text.$input-transition) {
+    transition: text.$input-transition;
+  }
+
+  @if $select-triangle-color != transparent {
+    background-origin: content-box;
+    background-position: global.$global-right (-(forms.$form-spacing)) center;
+    background-repeat: no-repeat;
+    background-size: 9px 6px;
+
+    padding-#{global.$global-right}: (forms.$form-spacing * 1.5);
+
+    @include mixins.background-triangle($select-triangle-color);
+  }
+
+  // Focus state
+  &:focus {
+    outline: none;
+    border: text.$input-border-focus;
+    background-color: text.$input-background-focus;
+    box-shadow: text.$input-shadow-focus;
+
+    @if value.has-value(text.$input-transition) {
+      transition: text.$input-transition;
+    }
+  }
+
+  // Disabled state
+  &:disabled {
+    background-color: text.$input-background-disabled;
+    cursor: text.$input-cursor-disabled;
+  }
+
+  // Hide the dropdown arrow shown in newer IE versions
+  &::-ms-expand {
+    display: none;
+  }
+
+  &[multiple] {
+    height: auto;
+    background-image: none;
+  }
+  &:not([multiple]) {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
+
+@mixin foundation-form-select {
+  select {
+    @include form-select;
+  }
+}
