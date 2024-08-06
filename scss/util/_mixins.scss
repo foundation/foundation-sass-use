@@ -328,10 +328,8 @@ $-zf-bp-value: null;
   // Iterate on breakpoint(s)
   @each $bp in $-list {
     $old-zf-size: null;
-    @if meta.global-variable-exists(-zf-size) {
-      $old-zf-size: breakpoint.$zf-size;
-    }
-    breakpoint.$-zf-size: $bp !global;
+    $old-zf-size: breakpoint.$zf-size;
+    breakpoint.$zf-size: $bp;
 
     @if ($media-queries == true or ($media-queries == 'for-lists' and $-breakpoints-is-a-list)) {
       @include breakpoint.breakpoint($bp) {
@@ -342,7 +340,7 @@ $-zf-bp-value: null;
       @content;
     }
 
-    breakpoint.$-zf-size: $old-zf-size !global;
+    breakpoint.$zf-size: $old-zf-size;
   }
 }
 

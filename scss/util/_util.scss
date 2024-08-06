@@ -9,6 +9,6 @@
 @forward 'color';
 @forward 'selector';
 @forward 'flex';
-@forward 'breakpoint';
+@forward 'breakpoint' hide $zf-size;
 @forward 'mixins';
 @forward 'typography';
