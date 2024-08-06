@@ -1,7 +1,7 @@
 @use "../global";
 @use "../util/unit";
 @use "../util/value";
-@use "forms";
+@use "variables";
 @use "text";
 
 // Foundation for Sites
@@ -33,7 +33,7 @@ $input-prefix-padding: 1rem !default;
   .input-group {
     display: if(global.$global-flexbox, flex, table);
     width: 100%;
-    margin-bottom: forms.$form-spacing;
+    margin-bottom: variables.$form-spacing;
 
     @if global.$global-flexbox {
       align-items: stretch;

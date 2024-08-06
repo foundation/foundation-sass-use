@@ -2,7 +2,7 @@
 @use "../util/selector";
 @use "../util/unit";
 @use "../util/value";
-@use "forms";
+@use "variables";
 
 // Foundation for Sites
 // https://get.foundation
@@ -58,7 +58,7 @@ $input-border-focus: 1px solid global.$dark-gray !default;
 
 /// Padding of text inputs.
 /// @type Color
-$input-padding: forms.$form-spacing * 0.5 !default;
+$input-padding: variables.$form-spacing * 0.5 !default;
 
 /// Box shadow inside text inputs when not focused.
 /// @type Shadow
@@ -95,7 +95,7 @@ $form-button-radius: global.$global-radius !default;
   box-sizing: border-box;
   width: 100%;
   height: $height;
-  margin: 0 0 forms.$form-spacing;
+  margin: 0 0 variables.$form-spacing;
   padding: $input-padding;
 
   border: $input-border;

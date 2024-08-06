@@ -1,7 +1,7 @@
 @use "../global";
 @use "../util/unit";
 @use "../util/value";
-@use "forms";
+@use "variables";
 @use "text";
 
 // Foundation for Sites
@@ -41,9 +41,9 @@ $form-label-line-height: 1.8 !default;
 @mixin form-label-middle {
   $input-border-width: value.get-border-value(text.$input-border, width);
 
-  margin: 0 0 forms.$form-spacing;
+  margin: 0 0 variables.$form-spacing;
   line-height: global.$global-lineheight;
-  padding: (forms.$form-spacing * 0.5 + unit.rem-calc($input-border-width)) 0;
+  padding: (variables.$form-spacing * 0.5 + unit.rem-calc($input-border-width)) 0;
 }
 
 @mixin foundation-form-label {
