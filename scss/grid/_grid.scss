@@ -6,9 +6,11 @@
 /// @group grid
 ////
 
+@use "../variables";
+
 /// The maximum width of a row.
 /// @type Number
-$grid-row-width: global.$global-width !default;
+$grid-row-width: variables.$global-width !default;
 
 /// The default column count of a grid. Changing this value affects the logic of the grid mixins, and the number of CSS classes output.
 /// @type Number
@@ -35,15 +37,4 @@ $grid-column-alias: 'columns' !default;
 $block-grid-max: 8 !default;
 
 // Internal value to store the end column float direction
-$-zf-end-float: if($grid-column-align-edge, global.$global-right, global.$global-left);
-
-@use 'row';
-@use 'column';
-@use 'size';
-@use 'position';
-@use 'gutter';
-@use 'classes';
-@use 'layout';
-
-@use 'flex-grid';
-@use "../global";
+$-zf-end-float: if($grid-column-align-edge, variables.$global-right, variables.$global-left);

@@ -6,10 +6,6 @@
 /// @group forms
 ////
 
-/// Global spacing for form elements.
-/// @type Number
-$form-spacing: unit.rem-calc(16) !default;
-
 @use 'text';
 @use 'checkbox';
 @use 'label';
@@ -21,7 +17,8 @@ $form-spacing: unit.rem-calc(16) !default;
 @use 'progress';
 @use 'meter';
 @use 'error';
-@use "../util/unit";
+
+@forward "variables";
 
 @mixin foundation-forms {
   @include text.foundation-form-text;

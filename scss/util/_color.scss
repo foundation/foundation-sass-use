@@ -7,7 +7,7 @@
 @use "sass:map";
 @use "sass:math";
 @use 'math' as math2;
-@use "../global";
+@use "../variables";
 
 $contrast-warnings: true !default;
 
@@ -74,7 +74,7 @@ $success-color: null !default;
 /// @param {Number} $tolerance [$global-color-pick-contrast-tolerance] - Contrast tolerance.
 ///
 /// @returns {Color} the color from `$colors` (list of colors) that has the most contrast.
-@function color-pick-contrast($base, $colors: (global.$white, global.$black), $tolerance: global.$global-color-pick-contrast-tolerance) {
+@function color-pick-contrast($base, $colors: (variables.$white, variables.$black), $tolerance: variables.$global-color-pick-contrast-tolerance) {
   $contrast: color-contrast($base, list.nth($colors, 1));
   $best: list.nth($colors, 1);
 
@@ -113,8 +113,8 @@ $success-color: null !default;
 ///
 /// @returns {Color} color from foundation-palette
 @function get-color($key) {
-  @if map.has-key(global.$foundation-palette, $key) {
-    @return map.get(global.$foundation-palette, $key);
+  @if map.has-key(variables.$foundation-palette, $key) {
+    @return map.get(variables.$foundation-palette, $key);
   }
   @else {
     @error 'given $key is not available in $foundation-palette';
@@ -123,28 +123,28 @@ $success-color: null !default;
 
 /// Transfers the colors in the `$foundation-palette` map into variables, such as `$primary-color` and `$secondary-color`. Call this mixin below the Global section of your settings file to properly migrate your codebase.
 @mixin add-foundation-colors() {
-  @if map.has-key(global.$foundation-palette, primary) {
-    $primary-color: map.get(global.$foundation-palette, primary) !global;
+  @if map.has-key(variables.$foundation-palette, primary) {
+    $primary-color: map.get(variables.$foundation-palette, primary) !global;
   } @else {
     $primary-color: #1779ba !global;
   }
-  @if map.has-key(global.$foundation-palette, secondary) {
-    $secondary-color: map.get(global.$foundation-palette, secondary) !global;
+  @if map.has-key(variables.$foundation-palette, secondary) {
+    $secondary-color: map.get(variables.$foundation-palette, secondary) !global;
   } @else {
     $secondary-color: #767676 !global;
   }
-  @if map.has-key(global.$foundation-palette, success) {
-    $success-color: map.get(global.$foundation-palette, success) !global;
+  @if map.has-key(variables.$foundation-palette, success) {
+    $success-color: map.get(variables.$foundation-palette, success) !global;
   } @else {
     $success-color: #3adb76 !global;
   }
-  @if map.has-key(global.$foundation-palette, warning) {
-    $warning-color: map.get(global.$foundation-palette, warning) !global;
+  @if map.has-key(variables.$foundation-palette, warning) {
+    $warning-color: map.get(variables.$foundation-palette, warning) !global;
   } @else {
     $warning-color: #ffae00 !global;
   }
-  @if map.has-key(global.$foundation-palette, alert) {
-    $alert-color: map.get(global.$foundation-palette, alert) !global;
+  @if map.has-key(variables.$foundation-palette, alert) {
+    $alert-color: map.get(variables.$foundation-palette, alert) !global;
   } @else {
     $alert-color: #cc4b37 !global;
   }

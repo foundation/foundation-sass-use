@@ -5,9 +5,7 @@
 @use "grid";
 @use "gutter";
 @use "layout";
-@use "position";
 @use "row";
-@use "size";
 
 // Foundation for Sites
 // https://get.foundation
@@ -89,7 +87,7 @@
 
     @if grid.$grid-column-align-edge {
       &.#{$end} {
-        @include position.grid-col-end;
+        @include column.grid-col-end;
       }
     }
   }
@@ -112,20 +110,20 @@
     @for $i from 1 through row.$grid-column-count {
       // Column width
       .#{mixins.$zf-size}-#{$i} {
-        @include size.grid-column-size($i);
+        @include column.grid-column-size($i);
       }
 
       // Source ordering
       @if $i < row.$grid-column-count {
         @if $push {
           .#{mixins.$zf-size}-#{$push}-#{$i} {
-            @include position.grid-col-pos($i);
+            @include column.grid-col-pos($i);
           }
         }
 
         @if $pull {
           .#{mixins.$zf-size}-#{$pull}-#{$i} {
-            @include position.grid-col-pos(-$i);
+            @include column.grid-col-pos(-$i);
           }
         }
       }
@@ -135,7 +133,7 @@
 
       @if $offset {
         .#{mixins.$zf-size}-#{$offset}-#{$o} {
-          @include position.grid-col-off($o);
+          @include column.grid-col-off($o);
         }
       }
     }
@@ -169,7 +167,7 @@
     // Positioning
     @if $center {
       .#{mixins.$zf-size}-#{$center} {
-        @include position.grid-col-pos(center);
+        @include column.grid-col-pos(center);
       }
     }
 
@@ -181,7 +179,7 @@
     );
     @if ($uncenter or $push or $pull) {
       #{$-gutter-unpos-selector} {
-        @include position.grid-col-unpos;
+        @include column.grid-col-unpos;
       }
     }
   }

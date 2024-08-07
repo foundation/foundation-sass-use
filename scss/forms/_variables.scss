@@ -1,0 +1,16 @@
+// Foundation for Sites
+// https://get.foundation
+// Licensed under MIT Open Source
+
+////
+/// @group forms
+////
+
+@use "../util/unit";
+
+// Pull this into a separate file to avoid a circular dependency between
+// _text.scss and _forms.scss.
+
+/// Global spacing for form elements.
+/// @type Number
+$form-spacing: unit.rem-calc(16) !default;

@@ -1,5 +1,5 @@
 @use "../global";
-@use "forms";
+@use "variables";
 
 // Foundation for Sites
 // https://get.foundation
@@ -13,7 +13,7 @@
   [type='file'],
   [type='checkbox'],
   [type='radio'] {
-    margin: 0 0 forms.$form-spacing;
+    margin: 0 0 variables.$form-spacing;
   }
 
   // Styles for input/label siblings
@@ -22,8 +22,8 @@
     display: inline-block;
     vertical-align: baseline;
 
-    margin-#{global.$global-left}: forms.$form-spacing * 0.5;
-    margin-#{global.$global-right}: forms.$form-spacing;
+    margin-#{global.$global-left}: variables.$form-spacing * 0.5;
+    margin-#{global.$global-right}: variables.$form-spacing;
     margin-bottom: 0;
 
     &[for] {
@@ -34,7 +34,7 @@
   // Styles for inputs inside labels
   label > [type='checkbox'],
   label > [type='radio'] {
-    margin-#{global.$global-right}: forms.$form-spacing * 0.5;
+    margin-#{global.$global-right}: variables.$form-spacing * 0.5;
   }
 
   // Normalize file input width

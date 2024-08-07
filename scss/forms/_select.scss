@@ -2,7 +2,7 @@
 @use "../util/mixins";
 @use "../util/unit";
 @use "../util/value";
-@use "forms";
+@use "variables";
 @use "text";
 
 // Foundation for Sites
@@ -29,7 +29,7 @@ $select-radius: global.$global-radius !default;
   $height: (text.$input-font-size * unit.unitless-calc(text.$input-line-height)) + (value.get-side(text.$input-padding, 'top') + value.get-side(text.$input-padding, 'bottom')) - unit.rem-calc(1);
 
   height: $height;
-  margin: 0 0 forms.$form-spacing;
+  margin: 0 0 variables.$form-spacing;
   padding: text.$input-padding;
 
   appearance: none;
@@ -49,11 +49,11 @@ $select-radius: global.$global-radius !default;
 
   @if $select-triangle-color != transparent {
     background-origin: content-box;
-    background-position: global.$global-right (-(forms.$form-spacing)) center;
+    background-position: global.$global-right (-(variables.$form-spacing)) center;
     background-repeat: no-repeat;
     background-size: 9px 6px;
 
-    padding-#{global.$global-right}: (forms.$form-spacing * 1.5);
+    padding-#{global.$global-right}: (variables.$form-spacing * 1.5);
 
     @include mixins.background-triangle($select-triangle-color);
   }

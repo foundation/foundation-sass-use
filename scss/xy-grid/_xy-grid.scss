@@ -6,13 +6,15 @@
 /// @group xy-grid
 ////
 
+@use "../variables";
+
 /// Enables the XY grid.
 /// @type Boolean
 $xy-grid: true !default;
 
 /// The maximum width of a grid container.
 /// @type Number
-$grid-container: global.$global-width !default;
+$grid-container: variables.$global-width !default;
 
 /// The number of columns used in the grid.
 /// @type Number
@@ -35,7 +37,7 @@ $grid-container-padding: $grid-padding-gutters !default;
 
 /// The maximum width to apply to a grid container
 /// @type Number
-$grid-container-max: global.$global-width !default;
+$grid-container-max: variables.$global-width !default;
 
 /// The maximum number of cells in an XY block grid.
 /// @type Number
@@ -44,13 +46,3 @@ $xy-block-grid-max: 8 !default;
 @mixin set-xy-grid($grid) {
   $xy-grid: $grid !global;
 }
-
-@use 'gutters';
-@use 'grid';
-@use 'cell';
-@use 'frame';
-@use 'position';
-@use 'layout';
-@use 'collapse';
-@use 'classes';
-@use "../global";

@@ -15,7 +15,7 @@
 ////
 
 /// Patch to fix issue #12080
-$-zf-size: null;
+$zf-size: null;
 
 /// A list of named breakpoints. You can use these with the `breakpoint()` mixin to quickly create media queries.
 /// @type Map
@@ -170,9 +170,9 @@ $breakpoint-classes: (small medium large) !default;
 
     // Make breakpoint size available as a variable
     @if meta.global-variable-exists(-zf-size) {
-      $old-zf-size: $-zf-size;
+      $old-zf-size: $zf-size;
     }
-    $-zf-size: list.nth($value, 1) !global; // get the first value to account for `only` and `down` keywords
+    $zf-size: list.nth($value, 1) !global; // get the first value to account for `only` and `down` keywords
 
     // If $str is still an empty string, no media query is needed
     @if $str == '' {
@@ -196,7 +196,7 @@ $breakpoint-classes: (small medium large) !default;
       }
     }
 
-    $-zf-size: $old-zf-size !global;
+    $zf-size: $old-zf-size !global;
   }
 }
 
@@ -365,7 +365,7 @@ $breakpoint-classes: (small medium large) !default;
 
 /// Return the best breakpoint to use according to the calling context. It returns in order:
 /// 1. the given `$value` argument if it is not null.
-/// 2. the global breakpoint context `$-zf-size` if it is not null (like if called inside then `breakpoint()` mixin)
+/// 2. the global breakpoint context `$zf-size` if it is not null (like if called inside then `breakpoint()` mixin)
 /// 3. the given `$default` argument.
 /// @access private
 ///
@@ -377,8 +377,8 @@ $breakpoint-classes: (small medium large) !default;
   @if ($value != null) {
     @return $value;
   }
-  @else if (meta.variable-exists(-zf-size) and meta.type-of($-zf-size) != 'number') and $-zf-size != null {
-    @return $-zf-size;
+  @else if (meta.variable-exists(-zf-size) and meta.type-of($zf-size) != 'number') and $zf-size != null {
+    @return $zf-size;
   }
   @else {
     @return $default;

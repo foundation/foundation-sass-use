@@ -1,5 +1,5 @@
 @use "sass:map";
-@use "../global";
+@use "../variables";
 
 @function zf-flex-justify($text-direction) {
   $-zf-flex-justify: (
@@ -13,6 +13,8 @@
   @return $-zf-flex-justify;
 }
 
+// Internal variable that contains the flex justifying options
+$zf-flex-justify: zf-flex-justify(variables.$global-text-direction);
 
 $zf-flex-align: (
   'top': flex-start,
@@ -39,8 +41,8 @@ $zf-flex-direction: (
 /// @param {Keyword} $y [null] - Vertical alignment to use. Can be `top`, `bottom`, `middle`, or `stretch`. Or, set it to `null` (the default) to not set vertical alignment.
 @mixin flex-align($x: null, $y: null) {
   @if $x {
-    @if map.has-key(global.$zf-flex-justify, $x) {
-      $x: map.get(global.$zf-flex-justify, $x);
+    @if map.has-key($zf-flex-justify, $x) {
+      $x: map.get($zf-flex-justify, $x);
     }
     @else {
       @warn 'flex-grid-row-align(): #{$x} is not a valid value for horizontal alignment. Use left, right, center, justify, or spaced.';

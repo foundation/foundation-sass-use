@@ -3,8 +3,7 @@
 @use "sass:math";
 @use "sass:meta";
 @use "../../_vendor/sassy-lists/stylesheets/functions/remove";
-@use "../foundation";
-@use "../global";
+@use "../variables";
 @use "breakpoint";
 @use "math" as math2;
 @use "value";
@@ -183,7 +182,7 @@ $-zf-bp-value: null;
     display: table;
     content: ' ';
 
-    @if foundation.$global-flexbox {
+    @if variables.$global-flexbox {
       flex-basis: 0;
       order: 1;
     }
@@ -329,10 +328,8 @@ $-zf-bp-value: null;
   // Iterate on breakpoint(s)
   @each $bp in $-list {
     $old-zf-size: null;
-    @if meta.global-variable-exists(-zf-size) {
-      $old-zf-size: breakpoint.$zf-size;
-    }
-    breakpoint.$-zf-size: $bp !global;
+    $old-zf-size: breakpoint.$zf-size;
+    breakpoint.$zf-size: $bp;
 
     @if ($media-queries == true or ($media-queries == 'for-lists' and $-breakpoints-is-a-list)) {
       @include breakpoint.breakpoint($bp) {
@@ -343,7 +340,7 @@ $-zf-bp-value: null;
       @content;
     }
 
-    breakpoint.$-zf-size: $old-zf-size !global;
+    breakpoint.$zf-size: $old-zf-size;
   }
 }
 

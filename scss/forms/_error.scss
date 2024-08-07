@@ -2,7 +2,7 @@
 @use "../global";
 @use "../util/color" as color2;
 @use "../util/unit";
-@use "forms";
+@use "variables";
 
 // Foundation for Sites
 // https://get.foundation
@@ -61,8 +61,8 @@ $input-error-font-weight: global.$global-weight-bold !default;
 /// Adds error styles to a form element, using the values in the settings file.
 @mixin form-error {
   display: none;
-  margin-top: forms.$form-spacing * -0.5;
-  margin-bottom: forms.$form-spacing;
+  margin-top: variables.$form-spacing * -0.5;
+  margin-bottom: variables.$form-spacing;
 
   font-size: $input-error-font-size;
   font-weight: $input-error-font-weight;
